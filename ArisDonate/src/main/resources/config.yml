@@ -912,8 +912,8 @@ tab:
   enabled: true
   server-name: "ArisWorld"
   motto: "Гриферское выживание"
-  # к реальному числу онлайн добавится случайное число в этом диапазоне
-  fake-online-min: 5
-  fake-online-max: 10
+  # фейк-буст онлайна. 0/0 = выключен, показывается реальное число
+  fake-online-min: 0
+  fake-online-max: 0
   # частота обновления, в тиках (20 = 1 секунда)
   refresh-ticks: 60

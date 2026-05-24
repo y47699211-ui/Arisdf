@@ -63,8 +63,8 @@ public class TabService {
     }
 
     private void rerollFakeBoost() {
-        int lo = Math.max(0, plugin.getConfig().getInt("tab.fake-online-min", 5));
-        int hi = Math.max(lo, plugin.getConfig().getInt("tab.fake-online-max", 10));
+        int lo = Math.max(0, plugin.getConfig().getInt("tab.fake-online-min", 0));
+        int hi = Math.max(lo, plugin.getConfig().getInt("tab.fake-online-max", 0));
         fakeBoost = lo == hi ? lo : ThreadLocalRandom.current().nextInt(lo, hi + 1);
         lastBoostShuffle = System.currentTimeMillis();
     }
