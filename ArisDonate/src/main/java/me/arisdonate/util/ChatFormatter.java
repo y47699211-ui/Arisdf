@@ -43,26 +43,33 @@ public class ChatFormatter {
                 : plugin.getStaffManager().getPlayerRank(p.getName());
         DonateRank rank = plugin.getDonateManager().getPlayerRank(p.getName());
 
+        // Сортировка в табе = алфавит по имени команды.
+        // Нужный порядок: стаф «выше» доната, донат выше обычных игроков.
+        //   aa_… — стаф (сверху),
+        //   am_… — донат (середина),
+        //   zz_player — «Игрок» (снизу).
         String teamId;
         Component prefix;
         if (staff != null) {
             int sortWeight = 999 - staff.weight();
-            teamId = "as_" + pad4(Math.max(0, sortWeight)) + "_" + staff.id();
+            teamId = "aa_" + pad4(Math.max(0, sortWeight)) + "_" + staff.id();
             prefix = Msg.parse(staff.gradientName() + " ");
         } else if (rank != null) {
             int sortWeight = 9999 - rank.weight();
-            teamId = "ad_" + pad4(Math.max(0, sortWeight)) + "_" + rank.id();
+            teamId = "am_" + pad4(Math.max(0, sortWeight)) + "_" + rank.id();
             prefix = Msg.parse(rank.gradientName() + " ");
         } else {
-            teamId = "az_player";
+            teamId = "zz_player";
             prefix = Msg.parse("<gray>Игрок</gray> ");
         }
         if (teamId.length() > 16) teamId = teamId.substring(0, 16);
 
-        // remove player from any existing arisdonate / staff teams
+        // Снять с любых наших команд (иначе останется старый префикс после reload/обновления).
         for (Team t : sb.getTeams()) {
             String n = t.getName();
-            if (n.startsWith("ad_") || n.startsWith("as_") || n.startsWith("az_") || n.startsWith("Zzz_default")) {
+            if (n.startsWith("aa_") || n.startsWith("am_") || n.startsWith("zz_")
+             || n.startsWith("ad_") || n.startsWith("as_") || n.startsWith("az_")
+             || n.startsWith("Zzz_default")) {
                 t.removeEntry(p.getName());
             }
         }
