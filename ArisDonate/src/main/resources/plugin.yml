@@ -58,7 +58,7 @@ commands:
     permission-default: op
   tphere:
     description: Телепортировать игрока к себе
-    aliases: [tps]
+    aliases: [s, summon]
     permission: arisdonate.tphere
     permission-default: op
   tpa:

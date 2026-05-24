@@ -38,14 +38,16 @@ public class PermissionService {
         DEFAULT_PERMS.put("luna",     List.of("arisdonate.hat", "arisdonate.skull"));
         DEFAULT_PERMS.put("stellar",  List.of("arisdonate.fly", "arisdonate.feed", "arisdonate.heal"));
         DEFAULT_PERMS.put("nova",     List.of("arisdonate.speed"));
-        DEFAULT_PERMS.put("comet",    List.of("arisdonate.jump", "arisdonate.top", "arisdonate.back"));
+        DEFAULT_PERMS.put("comet",    List.of(
+                "arisdonate.jump", "arisdonate.top", "arisdonate.back",
+                "arisdonate.tphere"));
         DEFAULT_PERMS.put("galaxy",   List.of("arisdonate.repair"));
         DEFAULT_PERMS.put("nebula",   List.of("arisdonate.nick"));
         DEFAULT_PERMS.put("cosmos",   List.of("arisdonate.vanish", "arisdonate.god", "arisdonate.cure"));
         DEFAULT_PERMS.put("phoenix",  List.of("arisdonate.smite", "arisdonate.burn"));
         DEFAULT_PERMS.put("aris",     List.of(
                 "arisdonate.enderchest", "arisdonate.invsee",
-                "arisdonate.tphere", "arisdonate.tppos", "arisdonate.tpall"));
+                "arisdonate.tppos", "arisdonate.tpall"));
         DEFAULT_PERMS.put("arisplus", List.of(
                 "arisdonate.gamemode", "arisdonate.give", "arisdonate.item",
                 "arisdonate.more", "arisdonate.effect",

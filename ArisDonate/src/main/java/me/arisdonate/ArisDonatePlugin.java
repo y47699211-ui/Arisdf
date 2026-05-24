@@ -86,7 +86,6 @@ public class ArisDonatePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DonateGuiListener(this), this);
         getServer().getPluginManager().registerEvents(new KitsGuiListener(this), this);
         getServer().getPluginManager().registerEvents(new SphereShopListener(this), this);
-        getServer().getPluginManager().registerEvents(new ShopMenuListener(this), this);
         getServer().getPluginManager().registerEvents(new FreezeMoveListener(this), this);
         getServer().getPluginManager().registerEvents(new CommandSpyListener(this), this);
 
