@@ -51,12 +51,11 @@ public class BlockPlaceListener implements Listener {
     }
 
     private void tryCreate(Player player, Block block, RegionTier tier) {
-        if (plugin.getRegionManager().overlapsAny(block.getLocation(), tier.getSize())) {
+        if (plugin.getRegionManager().overlapsAny(block.getLocation(), tier)) {
             player.sendMessage(
                 Component.text("✗ Здесь уже есть регион! Нельзя ставить регионный блок.")
                     .color(TextColor.color(0xFF4444))
             );
-            // Отменяем установку
             block.setType(Material.AIR);
             player.getInventory().addItem(new ItemStack(tier.getBlockMaterial()));
             return;
@@ -72,6 +71,7 @@ public class BlockPlaceListener implements Listener {
         }
 
         int s = tier.getSize();
+        me.regionblocks.models.Region r = plugin.getRegionManager().getRegion(name);
         player.sendMessage(Component.text(""));
         player.sendMessage(
             Component.text("✦ Регион создан! ").color(TextColor.color(0x55FF55))
@@ -83,14 +83,18 @@ public class BlockPlaceListener implements Listener {
         );
         player.sendMessage(
             Component.text("  Размер:   ").color(TextColor.color(0xAAAAAA))
-                .append(Component.text(s + "×" + s + "×" + s + " блоков").color(TextColor.color(0xFFCC55)))
+                .append(Component.text(s + "×" + s + "×" + s + " блоков (вокруг блока)").color(TextColor.color(0xFFCC55)))
         );
-        player.sendMessage(
-            Component.text("  Угол:     ").color(TextColor.color(0xAAAAAA))
-                .append(Component.text(
-                    block.getX() + ", " + block.getY() + ", " + block.getZ()
-                ).color(TextColor.color(0xAAFFAA)))
-        );
+        if (r != null) {
+            player.sendMessage(
+                Component.text("  Защита от: ").color(TextColor.color(0xAAAAAA))
+                    .append(Component.text(r.minX() + ", " + r.minY() + ", " + r.minZ())
+                        .color(TextColor.color(0xAAFFAA)))
+                    .append(Component.text("  до: ").color(TextColor.color(0xAAAAAA)))
+                    .append(Component.text(r.maxX() + ", " + r.maxY() + ", " + r.maxZ())
+                        .color(TextColor.color(0xAAFFAA)))
+            );
+        }
         player.sendMessage(Component.text(""));
     }
 }

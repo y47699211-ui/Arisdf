@@ -25,38 +25,45 @@ public class RegionManager {
 
     // ── создание ──────────────────────────────────────────────────────────────
 
-    public String createRegion(String owner, Location corner, RegionTier tier) {
+    public String createRegion(String owner, Location centerBlock, RegionTier tier) {
         String base = owner.toLowerCase() + "_" + tier.name().toLowerCase();
         String name = base;
         int i = 1;
         while (regions.containsKey(name)) name = base + "_" + (i++);
 
-        if (overlapsAny(corner, tier.getSize())) return null;
+        if (overlapsAny(centerBlock, tier)) return null;
 
-        Region r = new Region(name, owner, corner, tier);
+        Region r = new Region(name, owner, centerBlock, tier);
         regions.put(name, r);
         save();
         return name;
     }
 
     /**
-     * Проверяет, пересекается ли новый куб (corner, size) с любым существующим регионом.
+     * Проверяет, пересекается ли новый куб (centerBlock, tier) с любым существующим регионом.
+     * Куб центрирован на centerBlock с границами [c-lowHalf .. c+highHalf] по каждой оси.
      */
-    public boolean overlapsAny(Location corner, int size) {
+    public boolean overlapsAny(Location centerBlock, RegionTier tier) {
+        int aLo = tier.lowHalf(), aHi = tier.highHalf();
+        int aMinX = centerBlock.getBlockX() - aLo, aMaxX = centerBlock.getBlockX() + aHi;
+        int aMinY = centerBlock.getBlockY() - aLo, aMaxY = centerBlock.getBlockY() + aHi;
+        int aMinZ = centerBlock.getBlockZ() - aLo, aMaxZ = centerBlock.getBlockZ() + aHi;
         for (Region r : regions.values()) {
-            if (!r.getCenter().getWorld().equals(corner.getWorld())) continue;
-            if (overlaps(corner, size, r.getCenter(), r.getTier().getSize())) return true;
+            if (!r.getCenter().getWorld().equals(centerBlock.getWorld())) continue;
+            if (aMinX <= r.maxX() && aMaxX >= r.minX()
+             && aMinY <= r.maxY() && aMaxY >= r.minY()
+             && aMinZ <= r.maxZ() && aMaxZ >= r.minZ()) return true;
         }
         return false;
     }
 
-    private boolean overlaps(Location a, int sA, Location b, int sB) {
-        // AABB пересечение: куб A [ax, ax+sA) и куб B [bx, bx+sB)
-        int ax = a.getBlockX(), ay = a.getBlockY(), az = a.getBlockZ();
-        int bx = b.getBlockX(), by = b.getBlockY(), bz = b.getBlockZ();
-        return ax < bx + sB && ax + sA > bx &&
-               ay < by + sB && ay + sA > by &&
-               az < bz + sB && az + sA > bz;
+    /** Совместимость со старым API. */
+    @Deprecated
+    public boolean overlapsAny(Location centerBlock, int size) {
+        for (RegionTier t : RegionTier.values()) {
+            if (t.getSize() == size) return overlapsAny(centerBlock, t);
+        }
+        return false;
     }
 
     // ── поиск ─────────────────────────────────────────────────────────────────

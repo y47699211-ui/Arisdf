@@ -53,9 +53,6 @@ public class RgCommand implements CommandExecutor {
         } else {
             for (Region r : regions) {
                 int s = r.getTier().getSize();
-                int ex = r.getCenter().getBlockX() + s - 1;
-                int ey = r.getCenter().getBlockY() + s - 1;
-                int ez = r.getCenter().getBlockZ() + s - 1;
 
                 player.sendMessage(Component.text("  ✦ ").color(TextColor.color(0xFFAA00))
                     .append(Component.text(r.getName()).color(TextColor.color(0xFFFFFF)).decoration(TextDecoration.BOLD, true)));
@@ -65,10 +62,16 @@ public class RgCommand implements CommandExecutor {
                     .append(Component.text(s + "×" + s + "×" + s + " блоков").color(TextColor.color(0xFFCC55))));
                 player.sendMessage(Component.text("     От: ").color(TextColor.color(0x888888))
                     .append(Component.text(
-                        r.getCenter().getBlockX() + ", " + r.getCenter().getBlockY() + ", " + r.getCenter().getBlockZ()
+                        r.minX() + ", " + r.minY() + ", " + r.minZ()
                     ).color(TextColor.color(0xAAFFAA)))
                     .append(Component.text("  До: ").color(TextColor.color(0x888888)))
-                    .append(Component.text(ex + ", " + ey + ", " + ez).color(TextColor.color(0xAAFFAA))));
+                    .append(Component.text(
+                        r.maxX() + ", " + r.maxY() + ", " + r.maxZ()
+                    ).color(TextColor.color(0xAAFFAA))));
+                player.sendMessage(Component.text("     Блок: ").color(TextColor.color(0x888888))
+                    .append(Component.text(
+                        r.getCenter().getBlockX() + ", " + r.getCenter().getBlockY() + ", " + r.getCenter().getBlockZ()
+                    ).color(TextColor.color(0xCCCCCC))));
                 if (!r.getMembers().isEmpty()) {
                     player.sendMessage(Component.text("     Участники: ").color(TextColor.color(0x888888))
                         .append(Component.text(String.join(", ", r.getMembers())).color(TextColor.color(0xCCCCCC))));

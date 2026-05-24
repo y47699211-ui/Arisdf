@@ -47,7 +47,8 @@ public class PermissionService {
         DEFAULT_PERMS.put("phoenix",  List.of("arisdonate.smite", "arisdonate.burn"));
         DEFAULT_PERMS.put("aris",     List.of(
                 "arisdonate.enderchest", "arisdonate.invsee",
-                "arisdonate.tppos", "arisdonate.tpall"));
+                "arisdonate.tppos", "arisdonate.tpall",
+                "arisdonate.setwarp", "arisdonate.delwarp"));
         DEFAULT_PERMS.put("arisplus", List.of(
                 "arisdonate.gamemode", "arisdonate.give", "arisdonate.item",
                 "arisdonate.more", "arisdonate.effect",

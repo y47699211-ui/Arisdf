@@ -30,8 +30,12 @@ public enum RegionTier {
     public String getDisplayName() { return displayName; }
     public Material getBlockMaterial() { return blockMaterial; }
     public int getSize() { return size; }
-    /** Половина стороны в блоках (для целочисленной проверки: пол(size/2)) */
-    public int getHalf() { return (size - 1) / 2; }
+    /** Сколько блоков «вниз» от центра входит в куб (для нечётных = (s-1)/2). */
+    public int lowHalf()  { return (size - 1) / 2; }
+    /** Сколько блоков «вверх» от центра входит в куб (для нечётных = (s-1)/2, для чётных = s/2). */
+    public int highHalf() { return size / 2; }
+    /** Совместимость: используется в старом коде проверки. */
+    public int getHalf() { return lowHalf(); }
     public int getColor() { return color; }
 
     public static RegionTier fromMaterial(Material mat) {

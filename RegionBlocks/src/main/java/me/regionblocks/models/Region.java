@@ -33,23 +33,26 @@ public class Region {
     public boolean hasAccess(String nick) { return isOwner(nick) || isMember(nick); }
 
     /**
-     * Куб размером size×size×size.
-     * Центральный блок = угол «начала», регион простирается от center до center+(size-1) по каждой оси.
-     * Иными словами: minX=cx, maxX=cx+(size-1), и аналогично Y, Z.
-     * Так для size=3: cx, cx+1, cx+2 — ровно 3 блока.
-     * Для size=6: cx..cx+5 — ровно 6 блоков.
+     * Куб размером size×size×size, **центрированный** на блоке региона.
+     * Для size=3: cx-1 .. cx+1 (3 блока).
+     * Для size=6: cx-2 .. cx+3 (6 блоков, для чётных небольшой +bias).
+     * Для size=9: cx-4 .. cx+4 (9 блоков).
      */
     public boolean contains(Location loc) {
         if (!loc.getWorld().equals(center.getWorld())) return false;
-        int s = tier.getSize();
-        int cx = center.getBlockX();
-        int cy = center.getBlockY();
-        int cz = center.getBlockZ();
-        int lx = loc.getBlockX();
-        int ly = loc.getBlockY();
-        int lz = loc.getBlockZ();
-        return lx >= cx && lx < cx + s &&
-               ly >= cy && ly < cy + s &&
-               lz >= cz && lz < cz + s;
+        int lo = tier.lowHalf();
+        int hi = tier.highHalf();
+        int cx = center.getBlockX(), cy = center.getBlockY(), cz = center.getBlockZ();
+        int lx = loc.getBlockX(),    ly = loc.getBlockY(),    lz = loc.getBlockZ();
+        return lx >= cx - lo && lx <= cx + hi &&
+               ly >= cy - lo && ly <= cy + hi &&
+               lz >= cz - lo && lz <= cz + hi;
     }
+
+    public int minX() { return center.getBlockX() - tier.lowHalf(); }
+    public int maxX() { return center.getBlockX() + tier.highHalf(); }
+    public int minY() { return center.getBlockY() - tier.lowHalf(); }
+    public int maxY() { return center.getBlockY() + tier.highHalf(); }
+    public int minZ() { return center.getBlockZ() - tier.lowHalf(); }
+    public int maxZ() { return center.getBlockZ() + tier.highHalf(); }
 }
