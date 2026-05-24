@@ -15,6 +15,11 @@ commands:
     aliases: [adonate, ad]
     usage: /arisdonate <give|set|remove|list|reload> [ник] [донат]
     permission: arisdonate.admin
+  arisstaff:
+    description: Админ-управление стаф-рангами (set/remove/list/reload)
+    aliases: [astaff, staff]
+    usage: /arisstaff <set|remove|list|reload> [ник] [ранг]
+    permission: arisdonate.admin
 
   sethome:
     description: Создать домик

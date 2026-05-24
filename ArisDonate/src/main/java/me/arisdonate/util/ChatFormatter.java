@@ -2,6 +2,7 @@ package me.arisdonate.util;
 
 import me.arisdonate.ArisDonatePlugin;
 import me.arisdonate.models.DonateRank;
+import me.arisdonate.models.StaffRank;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,9 +10,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 /**
- * Префикс доната перед ником в чате и в табе.
- * Для таба используется scoreboard team prefix (стандартный способ
- * отображения цветного префикса в табе и над головой в vanilla).
+ * Префикс перед ником в чате и в табе.
+ *
+ * Приоритет: стаф-ранг → донат → «Игрок».
+ * В таб используется scoreboard team prefix, как vanilla-способ показать цветной префикс.
  */
 public class ChatFormatter {
 
@@ -22,46 +24,56 @@ public class ChatFormatter {
     }
 
     public Component buildPrefix(Player p) {
+        StaffRank staff = plugin.getStaffManager() == null
+                ? null
+                : plugin.getStaffManager().getPlayerRank(p.getName());
+        if (staff != null) return Msg.parse(staff.gradientName());
+
         DonateRank rank = plugin.getDonateManager().getPlayerRank(p.getName());
-        if (rank == null) return Component.empty();
-        return Msg.parse(rank.gradientName());
+        if (rank != null) return Msg.parse(rank.gradientName());
+
+        return Msg.parse("<gray>Игрок</gray>");
     }
 
-    /** Обновляет tab-prefix через scoreboard team (sortable по weight). */
+    /** Обновляет tab-prefix через scoreboard team (sortable по весу). */
     public void applyTabPrefix(Player p) {
         Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
+        StaffRank staff = plugin.getStaffManager() == null
+                ? null
+                : plugin.getStaffManager().getPlayerRank(p.getName());
         DonateRank rank = plugin.getDonateManager().getPlayerRank(p.getName());
 
-        // teamId должен сортировать игроков по весу (выше — раньше). Format: "Annn_id"
         String teamId;
-        if (rank == null) {
-            teamId = "Zzz_default";
-        } else {
+        Component prefix;
+        if (staff != null) {
+            int sortWeight = 999 - staff.weight();
+            teamId = "as_" + pad4(Math.max(0, sortWeight)) + "_" + staff.id();
+            prefix = Msg.parse(staff.gradientName() + " ");
+        } else if (rank != null) {
             int sortWeight = 9999 - rank.weight();
-            String w = String.format("%04d", Math.max(0, sortWeight));
-            teamId = "ad_" + w + "_" + rank.id();
+            teamId = "ad_" + pad4(Math.max(0, sortWeight)) + "_" + rank.id();
+            prefix = Msg.parse(rank.gradientName() + " ");
+        } else {
+            teamId = "az_player";
+            prefix = Msg.parse("<gray>Игрок</gray> ");
         }
         if (teamId.length() > 16) teamId = teamId.substring(0, 16);
 
-        // remove player from any existing arisdonate teams
+        // remove player from any existing arisdonate / staff teams
         for (Team t : sb.getTeams()) {
-            if (t.getName().startsWith("ad_") || t.getName().startsWith("Zzz_default")) {
+            String n = t.getName();
+            if (n.startsWith("ad_") || n.startsWith("as_") || n.startsWith("az_") || n.startsWith("Zzz_default")) {
                 t.removeEntry(p.getName());
             }
         }
 
         Team team = sb.getTeam(teamId);
         if (team == null) team = sb.registerNewTeam(teamId);
-
-        if (rank != null) {
-            // Префикс должен быть Component, чтобы поддерживать градиент
-            team.prefix(Msg.parse(rank.gradientName() + " "));
-        } else {
-            team.prefix(Component.empty());
-        }
+        team.prefix(prefix);
         team.addEntry(p.getName());
 
-        // Также показываем над головой
-        p.setPlayerListName(null); // оставляем имя по умолчанию; team prefix добавит префикс автоматически
+        p.setPlayerListName(null);
     }
+
+    private static String pad4(int n) { return String.format("%04d", n); }
 }

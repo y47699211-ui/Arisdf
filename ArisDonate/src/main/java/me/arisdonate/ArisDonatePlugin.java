@@ -41,6 +41,7 @@ public class ArisDonatePlugin extends JavaPlugin {
     private PermissionService permissionService;
     private VisitorsManager visitorsManager;
     private TabService tabService;
+    private StaffManager staffManager;
 
     private NamespacedKey keyDonateRank;
     private NamespacedKey keyKitId;
@@ -82,6 +83,7 @@ public class ArisDonatePlugin extends JavaPlugin {
         permissionService = new PermissionService(this);
         permissionService.refreshAll();
         visitorsManager = new VisitorsManager(this);
+        staffManager = new StaffManager(this);
         if (getConfig().getBoolean("tab.enabled", true)) {
             tabService = new TabService(this);
             tabService.start();
@@ -99,6 +101,7 @@ public class ArisDonatePlugin extends JavaPlugin {
         // Donate
         bind("donate", new DonateCommand(this));
         bind("arisdonate", new ArisDonateAdminCommand(this));
+        bind("arisstaff", new me.arisdonate.commands.staff.ArisStaffAdminCommand(this));
 
         // Home
         bind("sethome", new SetHomeCommand(this));
@@ -325,4 +328,5 @@ public class ArisDonatePlugin extends JavaPlugin {
     public PermissionService getPermissionService() { return permissionService; }
     public VisitorsManager getVisitorsManager()   { return visitorsManager; }
     public TabService getTabService()             { return tabService; }
+    public StaffManager getStaffManager()         { return staffManager; }
 }

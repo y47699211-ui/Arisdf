@@ -89,18 +89,26 @@ public class TabService {
     }
 
     private Component buildFooter(Player viewer, int online, int max, int visited) {
+        me.arisdonate.models.StaffRank staff = plugin.getStaffManager() == null
+                ? null
+                : plugin.getStaffManager().getPlayerRank(viewer.getName());
         DonateRank rank = plugin.getDonateManager() == null
                 ? null
                 : plugin.getDonateManager().getPlayerRank(viewer.getName());
 
         Component rankLine;
-        if (rank == null) {
-            rankLine = Component.text("без доната", TextColor.color(0x888888));
-        } else {
+        if (staff != null) {
+            int from = parseHex(staff.startHex(), 0xFFFFFF);
+            int to   = parseHex(staff.endHex(),   0xFFFFFF);
+            rankLine = Msg.gradient(staff.displayName(), from, to)
+                    .decoration(TextDecoration.BOLD, true);
+        } else if (rank != null) {
             int from = parseHex(rank.startHex(), 0xFFFFFF);
             int to   = parseHex(rank.endHex(),   0xFFFFFF);
             rankLine = Msg.gradient(rank.displayName(), from, to)
                     .decoration(TextDecoration.BOLD, true);
+        } else {
+            rankLine = Component.text("Игрок", TextColor.color(0xAAAAAA));
         }
 
         long pingMs = viewer.getPing();
