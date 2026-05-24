@@ -38,6 +38,7 @@ public class ArisDonatePlugin extends JavaPlugin {
     private SphereShopGui sphereShopGui;
     private SphereManager sphereManager;
     private EconomyManager economyManager;
+    private PermissionService permissionService;
 
     private NamespacedKey keyDonateRank;
     private NamespacedKey keyKitId;
@@ -76,6 +77,8 @@ public class ArisDonatePlugin extends JavaPlugin {
         donateGui = new DonateGui(this);
         kitsGui = new KitsGui(this);
         sphereShopGui = new SphereShopGui(this);
+        permissionService = new PermissionService(this);
+        permissionService.refreshAll();
 
         // Listeners
         getServer().getPluginManager().registerEvents(new ChatFormatListener(this), this);
@@ -312,4 +315,5 @@ public class ArisDonatePlugin extends JavaPlugin {
     public KitManager getKitManager()             { return kitManager; }
     public MessageManager getMessageManager()     { return messageManager; }
     public ChatFormatter getChatFormatter()       { return chatFormatter; }
+    public PermissionService getPermissionService() { return permissionService; }
 }

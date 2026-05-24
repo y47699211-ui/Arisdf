@@ -71,7 +71,17 @@ public class KitManager {
 
     public boolean canTakeKit(Player p, Kit kit) {
         if (canBypassCooldown(p)) return true;
-        return p.hasPermission("arisdonate.kit." + kit.id);
+        if (p.hasPermission("arisdonate.kit." + kit.id)) return true;
+        // Запасной путь: PermissionAttachment может ещё не доехать в первом тике
+        // после join — поэтому смотрим напрямую в DonateManager.
+        me.arisdonate.models.DonateRank rank = plugin.getDonateManager().getPlayerRank(p.getName());
+        if (rank == null) return false;
+        if (kit.id.equalsIgnoreCase(rank.kitId())) return true;
+        // владелец более высокого ранга может брать киты ниже своего веса
+        for (me.arisdonate.models.DonateRank r : plugin.getDonateManager().getRanks().values()) {
+            if (r.weight() <= rank.weight() && kit.id.equalsIgnoreCase(r.kitId())) return true;
+        }
+        return false;
     }
 
     public void giveKit(Player p, Kit k) {

@@ -13,6 +13,7 @@ public class ReloadCommand extends BaseCommand {
     protected void execute(CommandSender sender, Command command, String label, String[] args) {
         if (!check(sender, "arisdonate.admin")) return;
         plugin.reloadConfig();
-        sender.sendMessage(Msg.parse("&aКонфигурация перечитана. Для применения новых рангов перезапустите сервер."));
+        if (plugin.getPermissionService() != null) plugin.getPermissionService().refreshAll();
+        sender.sendMessage(Msg.parse("&aКонфигурация перечитана и пермы донатов перевыданы."));
     }
 }

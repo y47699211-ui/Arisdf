@@ -18,10 +18,17 @@ public class PlayerJoinListener implements Listener {
         Player p = e.getPlayer();
         plugin.getChatFormatter().applyTabPrefix(p);
         plugin.getVanishManager().refreshFor(p);
+        if (plugin.getPermissionService() != null) {
+            plugin.getPermissionService().apply(p);
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        plugin.getBackManager().store(e.getPlayer());
+        Player p = e.getPlayer();
+        plugin.getBackManager().store(p);
+        if (plugin.getPermissionService() != null) {
+            plugin.getPermissionService().remove(p);
+        }
     }
 }

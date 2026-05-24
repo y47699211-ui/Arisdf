@@ -54,8 +54,8 @@ public class ShopListener implements Listener {
         KIT_PRICES.put("comet",    75_000L);
         KIT_PRICES.put("galaxy",  100_000L);
         KIT_PRICES.put("nebula",  150_000L);
-        KIT_PRICES.put("pulsar",  200_000L);
-        KIT_PRICES.put("supernova", 300_000L);
+        KIT_PRICES.put("cosmos",  200_000L);
+        KIT_PRICES.put("phoenix", 300_000L);
         KIT_PRICES.put("aris",      500_000L);
         KIT_PRICES.put("arisplus", 1_000_000L);
     }
@@ -581,10 +581,10 @@ public class ShopListener implements Listener {
             case "comet"     -> Material.WHITE_SHULKER_BOX;
             case "galaxy"    -> Material.PURPLE_SHULKER_BOX;
             case "nebula"    -> Material.PINK_SHULKER_BOX;
-            case "pulsar"    -> Material.ORANGE_SHULKER_BOX;
-            case "supernova" -> Material.RED_SHULKER_BOX;
-            case "aris"      -> Material.YELLOW_SHULKER_BOX;
-            case "arisplus"  -> Material.BLACK_SHULKER_BOX;
+            case "cosmos"    -> Material.BLUE_SHULKER_BOX;
+            case "phoenix"   -> Material.RED_SHULKER_BOX;
+            case "aris"      -> Material.ORANGE_SHULKER_BOX;
+            case "arisplus"  -> Material.YELLOW_SHULKER_BOX;
             default          -> Material.SHULKER_BOX;
         };
     }

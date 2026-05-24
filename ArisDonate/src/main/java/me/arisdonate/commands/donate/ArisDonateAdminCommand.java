@@ -34,6 +34,7 @@ public class ArisDonateAdminCommand extends BaseCommand {
                 return;
             case "reload":
                 plugin.reloadConfig();
+                if (plugin.getPermissionService() != null) plugin.getPermissionService().refreshAll();
                 sender.sendMessage(Msg.parse("&aКонфигурация перечитана."));
                 return;
             case "remove": {
@@ -41,7 +42,10 @@ public class ArisDonateAdminCommand extends BaseCommand {
                 String nick = args[1];
                 plugin.getDonateManager().setPlayerRank(nick, null);
                 Player p = Players.online(nick);
-                if (p != null) plugin.getChatFormatter().applyTabPrefix(p);
+                if (p != null) {
+                    plugin.getChatFormatter().applyTabPrefix(p);
+                    if (plugin.getPermissionService() != null) plugin.getPermissionService().apply(p);
+                }
                 sender.sendMessage(Msg.parse("&aДонат у &e" + nick + " &aудалён."));
                 return;
             }
@@ -59,6 +63,7 @@ public class ArisDonateAdminCommand extends BaseCommand {
                 Player p = Players.online(nick);
                 if (p != null) {
                     plugin.getChatFormatter().applyTabPrefix(p);
+                    if (plugin.getPermissionService() != null) plugin.getPermissionService().apply(p);
                     p.sendMessage(Msg.parse("&aВам выдан донат " + rank.gradientName() + " &a!"));
                 }
                 sender.sendMessage(Msg.parse("&aДонат " + rank.gradientName() + " &aвыдан игроку &e" + nick));
