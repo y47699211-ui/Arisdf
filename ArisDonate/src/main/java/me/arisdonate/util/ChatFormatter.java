@@ -4,6 +4,8 @@ import me.arisdonate.ArisDonatePlugin;
 import me.arisdonate.models.DonateRank;
 import me.arisdonate.models.StaffRank;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -32,7 +34,8 @@ public class ChatFormatter {
         DonateRank rank = plugin.getDonateManager().getPlayerRank(p.getName());
         if (rank != null) return Msg.parse(rank.gradientName());
 
-        return Msg.parse("<gray>Игрок</gray>");
+        return Component.text("Игрок", NamedTextColor.GRAY)
+                .decoration(TextDecoration.ITALIC, false);
     }
 
     /** Обновляет tab-prefix через scoreboard team (sortable по весу). */
@@ -60,7 +63,8 @@ public class ChatFormatter {
             prefix = Msg.parse(rank.gradientName() + " ");
         } else {
             teamId = "zz_player";
-            prefix = Msg.parse("<gray>Игрок</gray> ");
+            prefix = Component.text("Игрок ", NamedTextColor.GRAY)
+                    .decoration(TextDecoration.ITALIC, false);
         }
         if (teamId.length() > 16) teamId = teamId.substring(0, 16);
 
