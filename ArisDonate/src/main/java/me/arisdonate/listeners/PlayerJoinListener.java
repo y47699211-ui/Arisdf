@@ -21,6 +21,9 @@ public class PlayerJoinListener implements Listener {
         if (plugin.getPermissionService() != null) {
             plugin.getPermissionService().apply(p);
         }
+        if (plugin.getVisitorsManager() != null) {
+            plugin.getVisitorsManager().register(p.getUniqueId());
+        }
     }
 
     @EventHandler

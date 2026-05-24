@@ -39,6 +39,8 @@ public class ArisDonatePlugin extends JavaPlugin {
     private SphereManager sphereManager;
     private EconomyManager economyManager;
     private PermissionService permissionService;
+    private VisitorsManager visitorsManager;
+    private TabService tabService;
 
     private NamespacedKey keyDonateRank;
     private NamespacedKey keyKitId;
@@ -79,6 +81,11 @@ public class ArisDonatePlugin extends JavaPlugin {
         sphereShopGui = new SphereShopGui(this);
         permissionService = new PermissionService(this);
         permissionService.refreshAll();
+        visitorsManager = new VisitorsManager(this);
+        if (getConfig().getBoolean("tab.enabled", true)) {
+            tabService = new TabService(this);
+            tabService.start();
+        }
 
         // Listeners
         getServer().getPluginManager().registerEvents(new ChatFormatListener(this), this);
@@ -248,6 +255,7 @@ public class ArisDonatePlugin extends JavaPlugin {
         if (kitManager    != null) kitManager.saveCooldowns();
         if (sphereManager != null) sphereManager.stop();
         if (economyManager != null) economyManager.save();
+        if (tabService     != null) tabService.stop();
         getLogger().info("ArisDonate выключен, данные сохранены.");
     }
 
@@ -315,4 +323,6 @@ public class ArisDonatePlugin extends JavaPlugin {
     public MessageManager getMessageManager()     { return messageManager; }
     public ChatFormatter getChatFormatter()       { return chatFormatter; }
     public PermissionService getPermissionService() { return permissionService; }
+    public VisitorsManager getVisitorsManager()   { return visitorsManager; }
+    public TabService getTabService()             { return tabService; }
 }
